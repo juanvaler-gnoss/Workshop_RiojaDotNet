@@ -6,7 +6,6 @@ variables:
 
 jobs:
 - job: 'Windows'
-  platform: x64
   strategy:
     matrix:
       Visual Studio 2015:
@@ -52,13 +51,13 @@ jobs:
     inputs:
       restoreSolution: '$(solution)'
   
-  - task: DotNetCoreCLI@2
+  - task: VSBuild@1
     displayName: 'Compilacion'
     inputs:
-      command: build
-      projects: '$(solution)'
-      arguments: '--configuration $(buildConfiguration)' 
-  
+      solution: '$(solution)'
+      platform: '$(buildPlatform)'
+      configuration: '$(buildConfiguration)'
+    
   - task: CopyFiles@2
     displayName: 'Copia libreria nativa a directorio de Test'
     inputs:
