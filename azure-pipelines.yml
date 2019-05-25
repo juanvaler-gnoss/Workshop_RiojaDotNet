@@ -6,7 +6,7 @@ variables:
 
 jobs:
 - job: 'Windows'
-
+  platform: x64
   strategy:
     matrix:
       Visual Studio 2015:
@@ -138,4 +138,19 @@ jobs:
       command: test
       projects: '$(testProject)'
       arguments: '--configuration $(buildConfiguration)'      
+  
+  - task: CopyFiles@2
+    displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+    inputs:
+      SourceFolder: '$(system.defaultworkingdirectory)'
+      Contents: '**\bin\$(BuildConfiguration)\**'
+      TargetFolder: '$(build.artifactstagingdirectory)'
+    condition: succeededOrFailed()    
+  
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact'
+    inputs:
+      PathtoPublish: '$(build.artifactstagingdirectory)'
+    condition: succeededOrFailed()
+
      
