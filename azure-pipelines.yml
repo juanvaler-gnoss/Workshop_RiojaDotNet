@@ -32,7 +32,7 @@ jobs:
   - checkout: self
     submodules: true
  
-   - task: CMake@1
+  - task: CMake@1
     displayName: 'CMake .. -G"$(generator)"'
     inputs:
       workingDirectory: 'build'
