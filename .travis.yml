@@ -1,0 +1,14 @@
+language: csharp
+dist: xenial
+mono: none
+dotnet: 2.2.104
+os:
+  - linux
+  - osx
+install:
+- dotnet restore
+script:
+- dotnet build
+- dotnet test test/MathTests/MathTests.csproj
+-notifications:
+-  email: false
