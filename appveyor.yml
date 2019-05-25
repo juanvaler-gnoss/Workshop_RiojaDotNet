@@ -1,0 +1,81 @@
+version: 1.0.{build}
+os:
+  - Visual Studio 2019
+  - Visual Studio 2017
+  - Visual Studio 2015
+  - Visual Studio 2013
+
+platform:
+- Any CPU
+
+configuration:
+- Debug
+- Release
+
+matrix:
+  exclude:
+    - os: Visual Studio 2013
+      configuration : Release  
+
+    - os: Visual Studio 2015
+      configuration : Debug        
+          
+    - os: Visual Studio 2017
+      configuration : Debug   
+    
+    - os: Visual Studio 2019
+      configuration : Debug   
+      
+  allow_failures:      
+    - os: Visual Studio 2013
+      configuration : Debug
+
+init:
+- echo %platform%
+- set arch=%platform%
+- if "%platform%" == "Any CPU" (set arch="x64")
+- echo %APPVEYOR_BUILD_WORKER_IMAGE%
+- if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2015" ( set generator="Visual Studio 12 2013" )
+- if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2015" ( set generator="Visual Studio 14 2015" )
+- if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2017" ( set generator="Visual Studio 15 2017" )
+- if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2019" ( set generator="Visual Studio 16 2019" )
+- echo cmake . -G %generator% -A %arch%
+
+before_build: 
+#CMake native library
+- cmd: |-
+    cd "src\C++ Library"
+    mkdir build
+    cd build
+    cmake --version
+    cmake .. -G %generator% -A %arch%
+    cmake --build . --target --config %configuration%   
+build_script:
+#Compile native library
+- cmd: |-
+   cmake --build . --target --config %configuration%   
+#Compile NetCore project
+- cmd: |-
+    cd "%APPVEYOR_BUILD_FOLDER%"
+    dotnet restore 
+    dotnet build 
+before_test:
+#Copy native library
+- cmd: |-     
+    xcopy "%APPVEYOR_BUILD_FOLDER%\src\C++ Library\build\%configuration%\EjemploNativo.dll" "%APPVEYOR_BUILD_FOLDER%\test\NativeMehotdsTests\bin\%configuration%\netcoreapp2.1\" /y
+    xcopy "%APPVEYOR_BUILD_FOLDER%\src\C++ Library\build\%configuration%\EjemploNativo.dll" "%APPVEYOR_BUILD_FOLDER%\src\PostNetCoreNativo\bin\%configuration%\netcoreapp2.1\" /y
+test_script:
+- cmd: |-
+    dotnet test 
+after_test:
+- cmd: |-
+    7z a Ejemplo.zip "%APPVEYOR_BUILD_FOLDER%\src\PostNetCoreNativo\bin\%configuration%\netcoreapp2.1\"
+artifacts:
+- path: '**\Ejemplo.zip'
+  name: Ejemplo_%configuration%
+
+only_commits:
+  files:
+    - appveyor.yml
+    - src/
+    - test/
