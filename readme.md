@@ -1,6 +1,6 @@
 # Workshop RiojaDotNet
 
-Ejemplo de ejemplos de CI
+Repositorio de ejemplos de CI
 
 ## Build status
 
