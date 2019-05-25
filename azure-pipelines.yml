@@ -5,16 +5,10 @@ variables:
   testProject: '**/NativeMehotdsTests.csproj'
 
 jobs:
-- job: 'cpp'
+- job: 'Windows'
 
   strategy:
     matrix:
-      High Sierra:
-        imageName: 'macos-10.13'
-      Mojave:
-        imageName: 'macos-10.14'
-      Ubuntu:
-        imageName: 'ubuntu-16.04'
       Visual Studio 2015:
         imageName: 'vs2015-win2012r2'
         generator: '-G "Visual Studio 14 2015" -A x64'
@@ -66,12 +60,70 @@ jobs:
       arguments: '--configuration $(buildConfiguration)' 
   
   - task: CopyFiles@2
-    displayName: 'Copia libreria nativa Windows a directorio de Test'
+    displayName: 'Copia libreria nativa a directorio de Test'
     inputs:
       SourceFolder: 'src/C++ Library/build/$(buildConfiguration)'
       Contents: 'EjemploNativo.dll'
       TargetFolder: 'test/NativeMehotdsTests/bin/$(buildConfiguration)/netcoreapp2.1'
   
+  - task: DotNetCoreCLI@2
+    displayName: 'Test'
+    inputs:
+      command: test
+      projects: '$(testProject)'
+      arguments: '--configuration $(buildConfiguration)'      
+      
+- job: 'cpp'
+
+  strategy:
+    matrix:
+      High Sierra:
+        imageName: 'macos-10.13'
+      Mojave:
+        imageName: 'macos-10.14'
+      Ubuntu:
+        imageName: 'ubuntu-16.04'
+        
+  pool:
+    vmImage: $(imageName)
+
+  displayName: 'NetCore C++'
+  
+  steps:
+  - checkout: self
+    submodules: true
+
+  - script: |
+      cd "src/C++ Library"
+      mkdir -p build
+      cd build
+      cmake  ./..
+    displayName: 'Make'
+    
+  - script: |
+      cd "src/C++ Library/build"
+      cmake --build . --target --config $(buildConfiguration)
+    displayName: 'Compile'
+      
+  - task: NuGetToolInstaller@0      
+  
+  - task: DotNetCoreInstaller@0
+    displayName: 'Instalar Net Core'
+    inputs:
+      version: '2.2.103'
+  
+  - task: NuGetCommand@2
+    displayName: 'NuGet restore'
+    inputs:
+      restoreSolution: '$(solution)'
+  
+  - task: DotNetCoreCLI@2
+    displayName: 'Compilacion'
+    inputs:
+      command: build
+      projects: '$(solution)'
+      arguments: '--configuration $(buildConfiguration)'   
+ 
   - task: CopyFiles@2
     displayName: 'Copia libreria nativa a directorio de Test'
     inputs:
