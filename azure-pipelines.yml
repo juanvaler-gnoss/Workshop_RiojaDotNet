@@ -36,7 +36,7 @@ jobs:
     displayName: 'CMake .. -G"$(generator)"'
     inputs:
       workingDirectory: '"src\C++ Library"'
-      cmakeArgs: '$(generator)"' 
+      cmakeArgs: '. $(generator)' 
    
   - script: |
       cd "src\C++ Library\build"
