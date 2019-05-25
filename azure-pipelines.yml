@@ -67,16 +67,17 @@ jobs:
   - task: CopyFiles@2
     displayName: 'Copia libreria nativa Windows a directorio de Test'
     inputs:
-      SourceFolder: '"src/C++ Library/build"'
-      Contents: '*'
+      SourceFolder: 'src/C++ Library/build/$(buildConfiguration)'
+      Contents: 'EjemploNativo.dll'
       TargetFolder: 'test/NativeMehotdsTests/bin/$(buildConfiguration)/netcoreapp2.1'
-      
+  
   - task: CopyFiles@2
     displayName: 'Copia libreria nativa a directorio de Test'
     inputs:
-      SourceFolder: '"src/C++ Library/build/$(buildConfiguration)"'
-      Contents: 'EjemploNativo.dll'
-      TargetFolder: 'test/NativeMehotdsTests/bin/$(buildConfiguration)/netcoreapp2.1'
+      SourceFolder: 'src/C++ Library/build'
+      Contents: '*'
+      TargetFolder: 'test/NativeMehotdsTests/bin/$(buildConfiguration)/netcoreapp2.1'     
+  
   
   - task: DotNetCoreCLI@2
     displayName: 'Test'
