@@ -9,10 +9,10 @@ jobs:
     matrix:
       Visual Studio 2015:
         imageName: 'vs2015-win2012r2'
-        generator: '-G "Visual Studio 14 2015"'
+        generator: '-G "Visual Studio 14 2015" -A Win32'
       Visual Studio 2017:
         imageName: 'vs2017-win2016'
-        generator: '-G "Visual Studio 15 2017"'
+        generator: '-G "Visual Studio 15 2017" -A Win32'
       Visual Studio 2019:
         imageName: 'windows-2019'
         generator: '-G "Visual Studio 16 2019" -A Win64'
@@ -37,19 +37,12 @@ jobs:
       cd "src/C++ Library/build"
       cmake --build . --target --config $(buildConfiguration)
     displayName: 'Compile'
-      
-  - task: NuGetToolInstaller@0      
-  
+       
   - task: DotNetCoreInstaller@0
     displayName: 'Instalar Net Core'
     inputs:
-      version: '2.2.103'
-  
-  - task: NuGetCommand@2
-    displayName: 'NuGet restore'
-    inputs:
-      restoreSolution: '$(solution)'
-  
+      version: '2.2.103'  
+ 
   - task: DotNetCoreCLI@2
     displayName: 'Compilacion'
     inputs:
@@ -117,17 +110,10 @@ jobs:
       cmake --build . --target --config $(buildConfiguration)
     displayName: 'Compile'
       
-  - task: NuGetToolInstaller@0      
-  
   - task: DotNetCoreInstaller@0
     displayName: 'Instalar Net Core'
     inputs:
-      version: '2.2.103'
-  
-  - task: NuGetCommand@2
-    displayName: 'NuGet restore'
-    inputs:
-      restoreSolution: '$(solution)'
+      version: '2.2.103'  
   
   - task: DotNetCoreCLI@2
     displayName: 'Compilacion'
