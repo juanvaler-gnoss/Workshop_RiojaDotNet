@@ -7,12 +7,6 @@ jobs:
 - job: 'Windows'
   strategy:
     matrix:
-      Visual Studio 2015:
-        imageName: 'vs2015-win2012r2'
-        generator: '-G "Visual Studio 14 2015" -A Win32'
-      Visual Studio 2017:
-        imageName: 'vs2017-win2016'
-        generator: '-G "Visual Studio 15 2017" -A Win32'
       Visual Studio 2019:
         imageName: 'windows-2019'
         generator: '-G "Visual Studio 16 2019" -A Win64'
