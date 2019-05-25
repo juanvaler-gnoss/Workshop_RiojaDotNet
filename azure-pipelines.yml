@@ -45,32 +45,51 @@ jobs:
       cmake --build . --target --config $(buildConfiguration)
     displayName: 'Compile'
       
-  - task: NuGetToolInstaller@0
+  - task: NuGetToolInstaller@0      
   
   - task: DotNetCoreInstaller@0
+    displayName: 'Instalar Net Core'
     inputs:
       version: '2.2.103'
   
   - task: NuGetCommand@2
+    displayName: 'NuGet restore'
     inputs:
       restoreSolution: '$(solution)'
   
   - task: DotNetCoreCLI@2
+    displayName: 'Compilacion'
     inputs:
       command: build
       projects: '$(solution)'
       arguments: '--configuration $(buildConfiguration)' 
   
   - task: CopyFiles@2
-    displayName: 'Copia libreria nativa'
+    displayName: 'Copia libreria nativa Windows a directorio de Test'
     inputs:
-      SourceFolder: '"$(system.defaultworkingdirectory)/src/C++ Library/build"'
+      SourceFolder: '"src/C++ Library/build"'
       Contents: '*'
-      TargetFolder: '$(build.artifactstagingdirectory)'
-    condition: succeededOrFailed()  
+      TargetFolder: 'test/NativeMehotdsTests/bin/$(buildConfiguration)/netcoreapp2.1'
+      
+  - task: CopyFiles@2
+    displayName: 'Copia libreria nativa a directorio de Test'
+    inputs:
+      SourceFolder: '"src/C++ Library/build/$(buildConfiguration)"'
+      Contents: 'EjemploNativo.dll'
+      TargetFolder: 'test/NativeMehotdsTests/bin/$(buildConfiguration)/netcoreapp2.1'
   
   - task: DotNetCoreCLI@2
+    displayName: 'Test'
     inputs:
       command: test
       projects: '$(test)'
-      arguments: '--configuration $(buildConfiguration)' 
+      arguments: '--configuration $(buildConfiguration)'      
+     
+- task: CopyFiles@2
+    displayName: 'Copia de el binario a artefacto'
+    inputs:
+      SourceFolder: '**\bin\$(BuildConfiguration)\**'
+      Contents: 'EjemploNativo.*'
+      TargetFolder: '$(Build.ArtifactStagingDirectory)'
+      
+      
