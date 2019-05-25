@@ -16,13 +16,14 @@ jobs:
         imageName: 'ubuntu-16.04'
       Visual Studio 2015:
         imageName: 'vs2015-win2012r2'
-        generator: '-G "Visual Studio 14 2015 -A x64'
+        generator: '-G "Visual Studio 14 2015" -A x64'
       Visual Studio 2017:
         imageName: 'vs2017-win2016'
-        generator: '-G "Visual Studio 15 2017 -A x64'
+        generator: '-G "Visual Studio 15 2017" -A x64'
       Visual Studio 2019:
         imageName: 'windows-2019'
         generator: '-G "Visual Studio 16 2019" -A x64'
+        
   pool:
     vmImage: $(imageName)
 
@@ -31,14 +32,15 @@ jobs:
   steps:
   - checkout: self
     submodules: true
- 
-  - task: CMake@1
-    displayName: 'CMake .. -G"$(generator)"'
-    inputs:
-      workingDirectory: '"src\C++ Library"'
-      cmakeArgs: '. $(generator)' 
-   
+
   - script: |
-      cd "src\C++ Library\build"
+      cd "src/C++ Library"
+      mkdir -p build
+      cd build
+      cmake  ./..
+    displayName: 'Make'
+    
+  - script: |
+      cd "src/C++ Library/build"
       cmake --build . --target --config $(buildConfiguration)
     displayName: 'Compile'
