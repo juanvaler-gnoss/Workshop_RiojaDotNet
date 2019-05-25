@@ -1,11 +1,17 @@
 strategy:
   matrix:
-    linux:
+    Ubuntu :
       imageName: 'ubuntu-16.04'
-    mac:
+    High Sierra:
       imageName: 'macos-10.13'
-    windows:
+    Mojave :
+      imageName: 'macos-10.14'
+    Visual Studio 2015:
+      imageName: 'vs2015-win2012r2'
+    Visual Studio 2017:
       imageName: 'vs2017-win2016'
+    Visual Studio 2019:
+      imageName: 'windows-2019'
 
 pool:
   vmImage: $(imageName)
