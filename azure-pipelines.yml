@@ -87,10 +87,3 @@ jobs:
       projects: '$(testProject)'
       arguments: '--configuration $(buildConfiguration)'      
      
-  - task: CopyFiles@2
-    displayName: 'Copia de el binario a artefacto'
-    inputs:
-      SourceFolder: '**\bin\$(BuildConfiguration)\**'
-      Contents: 'EjemploNativo.*'
-      TargetFolder: '$(Build.ArtifactStagingDirectory)'    
-      
