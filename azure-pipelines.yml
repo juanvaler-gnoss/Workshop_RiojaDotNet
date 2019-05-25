@@ -10,13 +10,13 @@ jobs:
     matrix:
       Visual Studio 2015:
         imageName: 'vs2015-win2012r2'
-        generator: '-G "Visual Studio 14 2015" -A x64'
+        generator: '-G "Visual Studio 14 2015" -A Win64'
       Visual Studio 2017:
         imageName: 'vs2017-win2016'
-        generator: '-G "Visual Studio 15 2017" -A x64'
+        generator: '-G "Visual Studio 15 2017" -A Win64'
       Visual Studio 2019:
         imageName: 'windows-2019'
-        generator: '-G "Visual Studio 16 2019" -A x64'
+        generator: '-G "Visual Studio 16 2019" -A Win64'
         
   pool:
     vmImage: $(imageName)
@@ -51,13 +51,13 @@ jobs:
     inputs:
       restoreSolution: '$(solution)'
   
-  - task: VSBuild@1
+  - task: DotNetCoreCLI@2
     displayName: 'Compilacion'
     inputs:
-      solution: '$(solution)'
-      platform: '$(buildPlatform)'
-      configuration: '$(buildConfiguration)'
-    
+      command: build
+      projects: '$(solution)'
+      arguments: '--configuration $(buildConfiguration)' 
+  
   - task: CopyFiles@2
     displayName: 'Copia libreria nativa a directorio de Test'
     inputs:
@@ -142,8 +142,7 @@ jobs:
     inputs:
       SourceFolder: 'src/C++ Library/build'
       Contents: '*'
-      TargetFolder: 'test/NativeMehotdsTests/bin/$(buildConfiguration)/netcoreapp2.1'     
-  
+      TargetFolder: 'test/NativeMehotdsTests/bin/$(buildConfiguration)/netcoreapp2.1'       
   
   - task: DotNetCoreCLI@2
     displayName: 'Test'
@@ -151,19 +150,4 @@ jobs:
       command: test
       projects: '$(testProject)'
       arguments: '--configuration $(buildConfiguration)'      
-  
-  - task: CopyFiles@2
-    displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
-    inputs:
-      SourceFolder: '$(system.defaultworkingdirectory)'
-      Contents: '**\bin\$(BuildConfiguration)\**'
-      TargetFolder: '$(build.artifactstagingdirectory)'
-    condition: succeededOrFailed()    
-  
-  - task: PublishBuildArtifacts@1
-    displayName: 'Publish Artifact'
-    inputs:
-      PathtoPublish: '$(build.artifactstagingdirectory)'
-    condition: succeededOrFailed()
-
      
