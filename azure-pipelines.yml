@@ -1,0 +1,68 @@
+variables:
+  solution: '**/cpplinq_examples.sln'
+  buildPlatform: 'x64'
+  buildConfiguration: 'Release'
+
+jobs:
+- job: 'cppWindows'        
+  displayName: 'C++'
+
+  strategy:
+    matrix:
+      Visual Studio 2015:
+        imageName: 'vs2015-win2012r2'
+        generator: 'Visual Studio 14 2015'
+      Visual Studio 2017:
+        imageName: 'vs2017-win2016'
+        generator: 'Visual Studio 15 2017'
+      Visual Studio 2019:
+        imageName: 'windows-2019'
+        generator: 'Visual Studio 16 2019'
+  pool:
+    vmImage: $(imageName)
+  
+  steps:
+  - checkout: self
+    submodules: true
+  
+  - task: CMake@1
+    displayName: 'CMake .. -G"$(generator)"'
+    inputs:
+      workingDirectory: 'build'
+      cmakeArgs: '.. -G"$(generator)" -A x64'
+
+  - task: MSBuild@1
+    displayName: 'Build solution $(solution)'
+    inputs:
+      solution: '$(solution)'
+      msbuildArguments: '/m /p:Configuration=$(buildConfiguration) /p:Platform=$(buildPlatform)'
+
+- job: 'cpp'
+
+  strategy:
+    matrix:
+      High Sierra:
+        imageName: 'macos-10.13'
+      Mojave:
+        imageName: 'macos-10.14'
+      Ubuntu:
+        imageName: 'ubuntu-16.04'
+  pool:
+    vmImage: $(imageName)
+
+  displayName: 'C++'
+  
+  steps:
+  - checkout: self
+    submodules: true
+ 
+  - script: |
+      mkdir -p build
+      cd build
+      cmake ./..
+    displayName: 'Make'
+    
+  - script: |
+      cd build
+      cmake --build . --target --config $(buildConfiguration)
+    displayName: 'Compile'
