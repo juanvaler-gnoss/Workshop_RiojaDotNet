@@ -2,7 +2,7 @@
 
 Ejemplo de ejemplos de CI
 
-# Status
+## Build status
 
 |Branch|Appveyor|Travis|Azure Pipelines|
 |------|--------|------|---------------|
