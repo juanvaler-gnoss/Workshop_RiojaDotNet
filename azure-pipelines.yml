@@ -2,6 +2,7 @@ variables:
   solution: '**/PostNetCoreNativo.sln'
   buildPlatform: 'x64'
   buildConfiguration: 'Release'
+  testProject: '**/NativeMehotdsTests.csproj'
 
 jobs:
 - job: 'cpp'
@@ -83,7 +84,7 @@ jobs:
     displayName: 'Test'
     inputs:
       command: test
-      projects: '$(test)'
+      projects: '$(testProject)'
       arguments: '--configuration $(buildConfiguration)'      
      
   - task: CopyFiles@2
