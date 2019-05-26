@@ -53,7 +53,6 @@ before_build:
     
 build_script:
 - choco install "sonarscanner-msbuild-net46" -y
-- SonarScanner.MSBuild.exe begin /k:"JorTurFer_Workshop_RiojaDotNet" /d:"sonar.host.url=https://sonarcloud.io" /o:"jorturfer-github" /d:"sonar.login=eb675e68eb0ae60808b9c5a006387c542fe1f82b"
 #Compile native library
 - cmd: |-
    cmake --build . --target --config %configuration%   
@@ -61,6 +60,7 @@ build_script:
 - cmd: |-
     cd "%APPVEYOR_BUILD_FOLDER%"
     dotnet restore 
+- SonarScanner.MSBuild.exe begin /k:"JorTurFer_Workshop_RiojaDotNet" /d:"sonar.host.url=https://sonarcloud.io" /o:"jorturfer-github" /d:"sonar.login=eb675e68eb0ae60808b9c5a006387c542fe1f82b"
 - msbuild /verbosity:quiet "PostNetCoreNativo.sln"
 - SonarScanner.MSBuild.exe end /d:"sonar.login=eb675e68eb0ae60808b9c5a006387c542fe1f82b"
 before_test:
