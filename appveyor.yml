@@ -61,7 +61,7 @@ build_script:
 - cmd: |-
     cd "%APPVEYOR_BUILD_FOLDER%"
     dotnet restore 
-- msbuild /verbosity:quiet "**PostNetCoreNativo**.sln"
+- msbuild /verbosity:quiet "PostNetCoreNativo.sln"
 - SonarScanner.MSBuild.exe end /d:"sonar.login=eb675e68eb0ae60808b9c5a006387c542fe1f82b"
 before_test:
 #Copy native library
