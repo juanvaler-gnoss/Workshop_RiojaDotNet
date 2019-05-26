@@ -6,7 +6,6 @@ dotnet: 2.2.104
 addons:
   sonarcloud:
     organization: "jorturfer-github"   
-    projectKey: "JorTurFer_Workshop_RiojaDotNet"
 os:
   - linux
   - osx
