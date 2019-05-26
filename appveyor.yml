@@ -1,13 +1,9 @@
 version: 1.0.{build}
 
 os:
-  - Visual Studio 2019
   - Visual Studio 2017
   - Visual Studio 2015
   - Visual Studio 2013
-
-environment:
-  JAVA_HOME: C:\Program Files\Java\jdk9
 
 platform:
 - Any CPU
@@ -25,11 +21,8 @@ matrix:
       configuration : Debug        
           
     - os: Visual Studio 2017
-      configuration : Debug   
-    
-    - os: Visual Studio 2019
-      configuration : Debug   
-      
+      configuration : Debug       
+     
   allow_failures:      
     - os: Visual Studio 2013
       configuration : Debug
@@ -53,7 +46,6 @@ before_build:
     cd build
     cmake --version
     cmake .. -G %generator% -A %arch%
-    cmake --build . --target --config %configuration%   
     
 build_script:
 - choco install "msbuild-sonarqube-runner" -y
