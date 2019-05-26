@@ -3,7 +3,9 @@ dist: xenial
 mono: none
 dotnet: 2.2.104
 
-
+addons:
+  sonarcloud:
+    organization: "jorturfer-github"   
 env:
   - CONFIGURATION=Release
 
@@ -20,20 +22,17 @@ script:
 - cmake --version
 - cmake ..
 - cmake --build . --target --config ${CONFIGURATION}
-- ls
 - cd
 - cd build/JorTurFer/Workshop_RiojaDotNet
 - dotnet build --configuration $CONFIGURATION
 - cd src
-- ls
 - cd C*
-- ls
 - cd build
-- ls
 - cd 
 - cd build/JorTurFer/Workshop_RiojaDotNet
 - cp -a "src/C++ Library/build/." "test/NativeMehotdsTests/bin/${CONFIGURATION}/netcoreapp2.1/"
 - dotnet test
+- sonar-scanner
 -notifications:
 -  email: false
 
