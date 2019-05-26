@@ -63,17 +63,21 @@ build_script:
 - SonarScanner.MSBuild.exe begin /k:"JorTurFer_Workshop_RiojaDotNet" /d:"sonar.host.url=https://sonarcloud.io" /o:"jorturfer-github" /d:"sonar.login=eb675e68eb0ae60808b9c5a006387c542fe1f82b"
 - msbuild /verbosity:quiet "PostNetCoreNativo.sln"
 - SonarScanner.MSBuild.exe end /d:"sonar.login=eb675e68eb0ae60808b9c5a006387c542fe1f82b"
+
 before_test:
 #Copy native library
 - cmd: |-     
     xcopy "%APPVEYOR_BUILD_FOLDER%\src\C++ Library\build\%configuration%\EjemploNativo.dll" "%APPVEYOR_BUILD_FOLDER%\test\NativeMehotdsTests\bin\%configuration%\netcoreapp2.1\" /y
     xcopy "%APPVEYOR_BUILD_FOLDER%\src\C++ Library\build\%configuration%\EjemploNativo.dll" "%APPVEYOR_BUILD_FOLDER%\src\PostNetCoreNativo\bin\%configuration%\netcoreapp2.1\" /y
+    
 test_script:
 - cmd: |-
     dotnet test 
+    
 after_test:
 - cmd: |-
     7z a Ejemplo.zip "%APPVEYOR_BUILD_FOLDER%\src\PostNetCoreNativo\bin\%configuration%\netcoreapp2.1\"
+    
 artifacts:
 - path: '**\Ejemplo.zip'
   name: Ejemplo_%configuration%
