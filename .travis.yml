@@ -3,9 +3,6 @@ dist: xenial
 mono: none
 dotnet: 2.2.104
 
-addons:
-  sonarcloud:
-    organization: "jorturfer-github"   
 env:
   - CONFIGURATION=Release
 
@@ -32,7 +29,7 @@ script:
 - cd build/JorTurFer/Workshop_RiojaDotNet
 - cp -a "src/C++ Library/build/." "test/NativeMehotdsTests/bin/${CONFIGURATION}/netcoreapp2.1/"
 - dotnet test
-- sonar-scanner
+
 -notifications:
 -  email: false
 
