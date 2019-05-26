@@ -48,7 +48,7 @@ before_build:
     cmake .. -G %generator% -A %arch%
     
 build_script:
-- choco install "msbuild-sonarqube-runner" -y
+- choco install "sonarscanner-msbuild-net46" -y
 #Compile native library
 - cmd: |-
    cmake --build . --target --config %configuration%   
@@ -56,9 +56,9 @@ build_script:
 - cmd: |-
     cd "%APPVEYOR_BUILD_FOLDER%"
     dotnet restore 
-- MSBuild.SonarQube.Runner.exe begin /k:"JorTurFer_Workshop_RiojaDotNet" /d:"sonar.host.url=https://sonarcloud.io" /o:"jorturfer-github" /d:"sonar.login=eb675e68eb0ae60808b9c5a006387c542fe1f82b"
+- SonarScanner.MSBuild.exe begin /k:"JorTurFer_Workshop_RiojaDotNet" /d:"sonar.host.url=https://sonarcloud.io" /o:"jorturfer-github" /d:"sonar.login=eb675e68eb0ae60808b9c5a006387c542fe1f82b"
 - msbuild /verbosity:quiet "PostNetCoreNativo.sln"
-- MSBuild.SonarQube.Runner.exe end /d:"sonar.login=eb675e68eb0ae60808b9c5a006387c542fe1f82b"
+- SonarScanner.MSBuild.exe end /d:"sonar.login=eb675e68eb0ae60808b9c5a006387c542fe1f82b"
 
 before_test:
 #Copy native library
