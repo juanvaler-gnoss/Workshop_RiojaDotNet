@@ -3,9 +3,6 @@ dist: xenial
 mono: none
 dotnet: 2.2.104
 
-addons:
-  sonarcloud:
-    organization: "jorturfer-github"   
 os:
   - linux
   - osx
@@ -14,6 +11,5 @@ install:
 script:
 - dotnet build
 - dotnet test test/MathTests/MathTests.csproj
-- sonar-scanner
 -notifications:
 -  email: false
